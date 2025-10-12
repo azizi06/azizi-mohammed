@@ -32,56 +32,12 @@
 </head>
 <body>
 
-    <h2>Rechercher une voiture</h2>
-    <input type="text" id="searchInput" placeholder="Tapez un modèle...">
+    <h2>AZIZI Mohammed Abdelaziz</h2>
+    <h3>Etudiant L3 Informatique Université Haute-Alsace </h3>
     
-    <ul id="carList">
-        <li>Audi A3</li>
-        <li>Audi Q5</li>
-        <li>BMW X1</li>
-        <li>BMW X5</li>
-        <li>Citroën C3</li>
-        <li>Citroën C4</li>
-        <li>Dacia Duster</li>
-        <li>Ford Focus</li>
-        <li>Ford Mustang</li>
-        <li>Mercedes Classe A</li>
-        <li>Mercedes Classe C</li>
-        <li>Peugeot 208</li>
-        <li>Peugeot 3008</li>
-        <li>Renault Clio</li>
-        <li>Renault Mégane</li>
-        <li>Tesla Model 3</li>
-        <li>Tesla Model Y</li>
-        <li>Volkswagen Golf</li>
-        <li>Volkswagen Polo</li>
-    </ul>
+    
 
-    <script>
-        function filterListByStartCharacter(inputId, listId) {
-            var input = document.getElementById(inputId);
-            var list = document.getElementById(listId);
-            var items = list.querySelectorAll('li'); //Récupère l’input et la liste des voitures.
-
-            input.addEventListener('input', function () { // ecoute les changements dans l input.
-                var searchTerm = input.value.toLowerCase(); // recuperer la requet
-                items.forEach(function (item) {     // filter les voitures selon la requet
-                    var text = item.textContent.toLowerCase();
-                    item.style.display = text.startsWith(searchTerm) ? '' : 'none';
-if(searchTerm != ""){
- item.style.backgroundColor = "green"    ;
-}else{
-    item.style.backgroundColor = "white"
-}
-                   
-
-                });
-            });
-        }
-
-        // Initialisation de la fonction pour l'input et la liste de voitures
-        filterListByStartCharacter('searchInput', 'carList');
-    </script>
+   
 
 </body>
 </html>
