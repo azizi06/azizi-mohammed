@@ -1,43 +1,237 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Filtrer une liste de voitures</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin-top: 50px;
-        }
-        input {
-            padding: 10px;
-            width: 250px;
-            font-size: 16px;
-            margin-bottom: 10px;
-        }
-        ul {
-            list-style: none;
-            padding: 0;
-        }
-        li {
-            padding: 8px;
-            font-size: 18px;
-            border: 1px solid #ccc;
-            margin: 5px;
-            border-radius: 5px;
-            background: #f9f9f9;
-        }
-    </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mohammed Azizi — Développeur informatique</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#111;--grey:#555;--paper:#fff;--accent:#E30613;--font:'Archivo','Helvetica Neue',Helvetica,Arial,sans-serif;--m:clamp(16px,6vw,72px);--ease:cubic-bezier(.7,0,.2,1)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--ink:#f4f4f4;--grey:#a8a8a8;--paper:#111;--accent:#FF3B47}}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth;scroll-padding-top:72px}
+body{background:var(--paper);color:var(--ink);font:400 clamp(15px,1.1vw,17px)/1.5 var(--font);padding:env(safe-area-inset-top,0) 0 env(safe-area-inset-bottom,0);overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+ul{list-style:none;padding:0}
+.wrap{padding:0 var(--m);max-width:1440px;margin:0 auto}
+header{position:sticky;top:env(safe-area-inset-top,0);background:var(--paper);z-index:5;border-bottom:2px solid var(--ink)}
+header .wrap{display:flex;justify-content:space-between;align-items:center;height:56px}
+header b{font-weight:800;letter-spacing:-.3px}
+nav{display:flex;gap:clamp(16px,3vw,40px);font-weight:700;font-size:14px}
+nav a{position:relative;padding:4px 0}
+nav a::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform .3s var(--ease)}
+nav a:hover::after,nav a[aria-current=page]::after{transform:scaleX(1)}
+.wipe{position:fixed;inset:0;background:var(--accent);z-index:20;transform:translateX(-101%);pointer-events:none}
+.page{display:none}.page.on{display:block}
+/* hero */
+.hero{display:grid;grid-template-columns:repeat(12,1fr);gap:0 24px;padding:clamp(40px,8vw,104px) 0 clamp(40px,6vw,80px)}
+.bar{grid-column:1/-1;width:64px;height:8px;background:var(--accent);margin-bottom:32px}
+h1{grid-column:1/-1;font-weight:800;font-size:clamp(52px,15.5vw,230px);line-height:.88;letter-spacing:-.055em;margin-left:-.04em}
+h1.sm{font-size:clamp(48px,11vw,160px)}
+.ln{display:block;overflow:hidden;padding-bottom:.06em}
+.ln>span{display:block}
+.dot{display:inline-block;width:.15em;height:.15em;background:var(--accent);margin-left:.04em}
+.lede{grid-column:1/9;margin-top:clamp(32px,5vw,64px);font-weight:700;font-size:clamp(20px,2.4vw,34px);line-height:1.2;letter-spacing:-.02em}
+.lede em{font-style:normal;color:var(--accent)}
+.meta{grid-column:10/-1;margin-top:clamp(32px,5vw,64px);padding-left:24px;border-left:3px solid var(--accent);color:var(--grey);font-size:14px;display:flex;flex-direction:column;justify-content:flex-end}
+.meta strong{color:var(--ink)}
+.page.on .bar{animation:grow 1s var(--ease) both}
+.page.on .ln>span{animation:up 1s var(--ease) both}
+.page.on .ln:nth-child(2)>span{animation-delay:.12s}
+.page.on .lede,.page.on .meta{animation:fade 1s .5s both}
+.page.on .meta{border-left-color:transparent;background:linear-gradient(var(--accent),var(--accent)) left/3px 0 no-repeat;animation:fade 1s .5s both,line 1.2s .7s var(--ease) forwards}
+@keyframes grow{from{width:0}}@keyframes up{from{transform:translateY(105%)}}@keyframes fade{from{opacity:0;transform:translateY(12px)}}@keyframes line{to{background-size:3px 100%}}
+/* sections */
+section{position:relative;padding:16px 0 clamp(48px,7vw,96px);display:grid;grid-template-columns:repeat(12,1fr);gap:0 24px}
+section::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:var(--ink);transform:scaleX(0);transform-origin:left;transition:transform 1.1s var(--ease)}
+section.in::before{transform:scaleX(1)}
+.label{grid-column:1/4;font:800 10.5px var(--font);letter-spacing:1.2px;text-transform:uppercase;color:var(--accent);padding-top:6px}
+.body{grid-column:4/-1}
+.big{font-weight:700;font-size:clamp(22px,3vw,40px);line-height:1.18;letter-spacing:-.025em;max-width:24em}
+.rv{opacity:0;transform:translateY(20px);transition:opacity .8s var(--ease),transform .8s var(--ease);transition-delay:calc(var(--i,0)*90ms)}
+.rv.in{opacity:1;transform:none}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:40px}
+.num{font-weight:800;font-size:clamp(48px,8vw,112px);line-height:.9;letter-spacing:-.05em}
+.num sup{color:var(--accent);font-size:.4em;letter-spacing:0;vertical-align:top}
+.stats p{color:var(--grey);font-size:14px;margin-top:8px;border-top:1px solid var(--ink);padding-top:8px}
+.cols{display:grid;grid-template-columns:repeat(3,1fr);gap:32px 24px}
+h3{font-weight:700;font-size:clamp(15px,1.3vw,18px)}
+.cols h3{border-bottom:1px solid var(--ink);padding-bottom:8px;margin-bottom:8px}
+.cols li{padding:2px 0}
+.cols small{display:block;color:var(--grey);font-size:13px;margin-top:12px}
+.tl{position:relative;padding-left:32px}
+.tl::before{content:"";position:absolute;left:0;top:6px;bottom:6px;width:3px;background:var(--accent);transform:scaleY(0);transform-origin:top;transition:transform 1.6s var(--ease)}
+.tl.in::before{transform:scaleY(1)}
+.entry{padding:0 0 28px}
+.row{display:flex;justify-content:space-between;gap:16px;align-items:baseline}
+.date{color:var(--grey);white-space:nowrap;font-size:14px}
+.entry p{color:var(--grey);max-width:34em}
+.lang{display:grid;grid-template-columns:110px 1fr auto;gap:16px;align-items:center;padding:10px 0;border-bottom:1px solid var(--ink);max-width:560px}
+.lang i{display:block;height:6px;background:var(--ink);transform:scaleX(0);transform-origin:left;transition:transform 1.2s var(--ease) .2s;width:var(--w)}
+.lang.in i{transform:scaleX(1)}
+.lang span:last-child{color:var(--grey);font-size:14px}
+/* projets */
+.proj{display:grid;grid-template-columns:repeat(12,1fr);gap:0 24px;position:relative;padding:16px 0 clamp(48px,6vw,80px)}
+.proj::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:var(--ink);transform:scaleX(0);transform-origin:left;transition:transform 1.1s var(--ease)}
+.proj.in::before{transform:scaleX(1)}
+.proj .side{grid-column:1/4;color:var(--grey);font-size:14px;padding-top:8px}
+.proj .side b{color:var(--accent);font:800 10.5px var(--font);letter-spacing:1.2px;text-transform:uppercase;display:block;margin-bottom:4px}
+.proj .side p{margin-bottom:16px}
+.proj .main{grid-column:4/-1}
+.proj h2{font-weight:800;font-size:clamp(32px,6vw,88px);line-height:.95;letter-spacing:-.05em;transition:color .3s}
+.proj:hover h2{color:var(--accent)}
+.proj .lead{font-weight:700;font-size:clamp(18px,2vw,26px);line-height:1.25;letter-spacing:-.02em;margin:24px 0 32px;max-width:28em}
+.tri{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.tri div{border-top:1px solid var(--ink);padding-top:12px;transition:border-color .3s,border-top-width .3s}
+.tri div:hover{border-top:3px solid var(--accent);padding-top:10px}
+.tri h3{margin-bottom:4px}
+.tri p{color:var(--grey);font-size:15px}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}
+.tags span{border:1px solid var(--ink);padding:2px 10px;font-size:13px;font-weight:700;transition:background .2s,color .2s}
+.tags span:hover{background:var(--ink);color:var(--paper)}
+/* contact */
+.mail{display:inline-block;font-weight:800;font-size:clamp(22px,5.4vw,84px);letter-spacing:-.045em;line-height:1;padding:4px 8px;margin-left:-8px;overflow-wrap:anywhere;transition:background .2s,color .2s}
+.mail:hover{background:var(--accent);color:#fff}
+.links{display:flex;gap:12px;flex-wrap:wrap;margin-top:32px}
+.btn{display:inline-block;background:var(--ink);color:var(--paper);font-weight:700;padding:12px 20px;transition:background .2s,color .2s,transform .2s}
+.btn:hover{background:var(--accent);color:#fff;transform:translateX(6px)}
+.cta{padding:0 0 clamp(48px,6vw,80px)}
+footer{border-top:2px solid var(--ink);padding:16px 0 32px;color:var(--grey);font-size:13px}
+footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+@media(max-width:800px){
+ .lede,.meta,.label,.body,.proj .side,.proj .main{grid-column:1/-1}
+ .meta{margin-top:32px}.label{margin-bottom:16px}.proj .side{margin-bottom:16px}
+ .cols,.tri,.stats{grid-template-columns:1fr}.stats{gap:32px}
+ .lang{grid-template-columns:90px 1fr auto}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.rv,section::before,.proj::before,.tl::before,.lang i{opacity:1;transform:none!important}}
+</style>
 </head>
 <body>
+<div class="wipe" aria-hidden="true"></div>
+<header><div class="wrap"><b>M. Azizi</b>
+<nav aria-label="Navigation"><a href="#/" data-r="home">Accueil</a><a href="#/projets" data-r="projets">Projets</a><a href="#contact" data-go="contact">Contact</a></nav></div></header>
 
-    <h2>AZIZI Mohammed Abdelaziz</h2>
-    <h3>Etudiant L3 Informatique Université Haute-Alsace </h3>
-    
-    
+<main class="wrap">
+<!-- PAGE 1 -->
+<div class="page" id="p-home">
+ <div class="hero">
+  <div class="bar" aria-hidden="true"></div>
+  <h1><span class="ln"><span>Mohammed</span></span><span class="ln"><span>Azizi<i class="dot" aria-hidden="true"></i></span></span></h1>
+  <p class="lede">Développeur informatique. Je cherche un stage de 3 à 6 mois en <em>intelligence artificielle, développement logiciel ou systèmes d’information.</em></p>
+  <p class="meta"><strong>Disponible immédiatement</strong>Mulhouse, France<br>Licence 3 Informatique, UHA</p>
+ </div>
 
-   
+ <section><div class="label rv">Profil</div>
+  <div class="body"><p class="big rv">Étudiant en Licence 3 Informatique à l’Université de Haute-Alsace, après trois années d’études d’ingénieur en IA à Tlemcen. J’aime les systèmes qui fonctionnent de bout en bout : du capteur Arduino au modèle de machine learning.</p>
+  <div class="stats">
+   <div class="rv" style="--i:1"><div class="num"><span data-n="4">0</span></div><p>années d’études en informatique et IA</p></div>
+   <div class="rv" style="--i:2"><div class="num"><span data-n="3">0</span></div><p>projets académiques menés à terme</p></div>
+   <div class="rv" style="--i:3"><div class="num"><span data-n="4">0</span></div><p>langues : arabe, français, anglais, allemand</p></div>
+  </div></div></section>
 
+ <section><div class="label rv">Compétences</div>
+  <div class="body"><div class="cols">
+   <div class="rv" style="--i:0"><h3>Langages</h3><ul><li>C / C++</li><li>Java</li><li>Python</li><li>SQL</li><li>JavaScript (React.js)</li><li>HTML, CSS</li><li>PHP (Laravel)</li></ul><small>Du bas niveau (C++) au web (React, Laravel).</small></div>
+   <div class="rv" style="--i:1"><h3>Outils</h3><ul><li>Git / GitHub</li><li>JIRA</li></ul><small>Versionnage du code et suivi des tâches en équipe.</small></div>
+   <div class="rv" style="--i:2"><h3>Domaines</h3><ul><li>Développement Arduino</li><li>Applications web et mobiles</li><li>Conception de bases de données</li><li>Traitement d’images</li></ul><small>Mis en pratique dans mes projets universitaires.</small></div>
+  </div></div></section>
+
+ <section><div class="label rv">Parcours</div>
+  <div class="body"><div class="tl rv">
+   <div class="entry"><div class="row"><h3>Licence 3 Informatique</h3><span class="date">2025 – présent</span></div><p>Université de Haute-Alsace, Mulhouse. Programmation orientée objet, projets en C++, Python et Arduino.</p></div>
+   <div class="entry"><div class="row"><h3>Études d’ingénieur en IA</h3><span class="date">2022 – 2025</span></div><p>Université de Tlemcen, Algérie. Trois années de formation à l’intelligence artificielle.</p></div>
+   <div class="entry"><div class="row"><h3>Baccalauréat, sciences expérimentales</h3><span class="date">2022</span></div><p>Tlemcen, Algérie.</p></div>
+   <div class="entry"><div class="row"><h3>Bénévole, Secours populaire français</h3><span class="date">Déc. 2025 – présent</span></div><p>Mulhouse, France. Engagement associatif en parallèle des études.</p></div>
+  </div></div></section>
+
+ <section><div class="label rv">Langues</div>
+  <div class="body">
+   <div class="lang rv" style="--i:0"><span>Arabe</span><i style="--w:100%"></i><span>Langue maternelle</span></div>
+   <div class="lang rv" style="--i:1"><span>Français</span><i style="--w:92%"></i><span>Courant</span></div>
+   <div class="lang rv" style="--i:2"><span>Anglais</span><i style="--w:66%"></i><span>B2</span></div>
+   <div class="lang rv" style="--i:3"><span>Allemand</span><i style="--w:17%"></i><span>A1</span></div>
+  </div></section>
+
+ <div class="cta"><a class="btn" href="#/projets">Voir mes projets</a></div>
+</div>
+
+<!-- PAGE 2 -->
+<div class="page" id="p-projets">
+ <div class="hero">
+  <div class="bar" aria-hidden="true"></div>
+  <h1 class="sm"><span class="ln"><span>Projets</span></span><span class="ln"><span>académiques<i class="dot" aria-hidden="true"></i></span></span></h1>
+  <p class="lede">Trois projets réalisés à l’Université de Haute-Alsace, <em>un par domaine : IA, logiciel, systèmes embarqués.</em></p>
+ </div>
+
+ <article class="proj"><div class="side rv"><b>Période</b><p>Janvier 2026</p><b>Cadre</b><p>Université de Haute-Alsace</p><b>Domaine</b><p>Intelligence artificielle</p></div>
+  <div class="main rv"><h2>Détection de fraude bancaire</h2>
+   <p class="lead">Un modèle qui repère les transactions frauduleuses à partir de données bancaires étiquetées.</p>
+   <div class="tri"><div><h3>Objectif</h3><p>Classer automatiquement chaque transaction comme légitime ou frauduleuse.</p></div>
+   <div><h3>Démarche</h3><p>Préparation des données étiquetées, entraînement puis évaluation d’un modèle de classification supervisée.</p></div>
+   <div><h3>Enjeu</h3><p>Les fraudes sont rares : juger le modèle sur sa seule précision globale serait trompeur.</p></div></div>
+   <div class="tags"><span>Python</span><span>scikit-learn</span><span>Classification</span><span>Traitement de données</span></div></div></article>
+
+ <article class="proj"><div class="side rv"><b>Période</b><p>Nov. 2025 – Janv. 2026</p><b>Cadre</b><p>Université de Haute-Alsace</p><b>Domaine</b><p>Développement logiciel</p></div>
+  <div class="main rv"><h2>Gestion de questionnaires</h2>
+   <p class="lead">Une application pour créer des tests et les faire passer.</p>
+   <div class="tri"><div><h3>Objectif</h3><p>Permettre la création de questionnaires puis leur passage par un utilisateur.</p></div>
+   <div><h3>Démarche</h3><p>Modélisation du problème en classes et développement en C++ selon les principes de la programmation orientée objet.</p></div>
+   <div><h3>Enjeu</h3><p>Une architecture claire, pour que l’application reste simple à faire évoluer.</p></div></div>
+   <div class="tags"><span>C++</span><span>POO</span><span>Conception logicielle</span></div></div></article>
+
+ <article class="proj"><div class="side rv"><b>Période</b><p>Sept. 2025 – Janv. 2026</p><b>Cadre</b><p>Université de Haute-Alsace</p><b>Domaine</b><p>Systèmes embarqués</p></div>
+  <div class="main rv"><h2>Remplissage de bouteilles</h2>
+   <p class="lead">Un système automatisé conçu et réalisé de bout en bout sur Arduino Uno.</p>
+   <div class="tri"><div><h3>Objectif</h3><p>Automatiser le remplissage de bouteilles sans intervention manuelle.</p></div>
+   <div><h3>Démarche</h3><p>Conception du montage, puis programmation de la carte Arduino Uno pour piloter le cycle de remplissage.</p></div>
+   <div><h3>Enjeu</h3><p>Faire le lien entre le logiciel et le monde physique : capteurs, actionneurs, séquençage.</p></div></div>
+   <div class="tags"><span>Arduino Uno</span><span>Électronique</span><span>Automatisation</span></div></div></article>
+
+ <article class="proj"><div class="side rv"><b>Depuis</b><p>Décembre 2025</p><b>Lieu</b><p>Mulhouse, France</p></div>
+  <div class="main rv"><h2>Bénévolat</h2>
+   <p class="lead">Secours populaire français, en parallèle des études.</p>
+   <div class="tags"><span>Engagement</span><span>Travail en équipe</span></div></div></article>
+
+ <div class="cta"><a class="btn" href="#/">Retour à l’accueil</a></div>
+</div>
+</main>
+
+<main class="wrap" style="padding-top:0">
+ <section id="contact"><div class="label rv">Contact</div>
+  <div class="body rv"><a class="mail" href="mailto:mohammed.azizi@uha.fr">mohammed.azizi@uha.fr</a>
+  <div class="links"><a class="btn" href="https://github.com/azizi06" target="_blank" rel="noopener">GitHub</a><a class="btn" href="https://linkedin.com/in/moazizi" target="_blank" rel="noopener">LinkedIn</a></div></div></section>
+</main>
+<footer><div class="wrap"><span>Mohammed Azizi</span><span>Mulhouse, France · Permis B</span></div></footer>
+
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const rm=matchMedia('(prefers-reduced-motion:reduce)').matches;
+let cur=null,obs;
+function count(el){const n=+el.dataset.n;if(rm){el.textContent=n;return}let t0;const f=t=>{t0=t0||t;const p=Math.min((t-t0)/1400,1);el.textContent=Math.round(n*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(f)};requestAnimationFrame(f)}
+function watch(){
+ obs&&obs.disconnect();
+ obs=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;e.target.classList.add('in');$$('[data-n]').filter(c=>e.target.contains(c)&&!c.dataset.d).forEach(c=>{c.dataset.d=1;count(c)});obs.unobserve(e.target)}),{threshold:.12});
+ $$('.page.on section,.page.on .proj,.page.on .rv,.page.on .tl,.page.on .lang,#contact,#contact .rv').forEach(el=>{el.classList.remove('in');obs.observe(el)});
+}
+function show(p){
+ $$('.page').forEach(x=>x.classList.toggle('on',x.id==='p-'+p));
+ $$('nav a[data-r]').forEach(a=>a.setAttribute('aria-current',a.dataset.r===p?'page':'false'));
+ document.title=(p==='projets'?'Projets — ':'')+'Mohammed Azizi — Développeur informatique';
+ scrollTo(0,0);watch();
+}
+function route(){
+ const p=location.hash==='#/projets'?'projets':'home';
+ if(p===cur)return;
+ if(cur===null||rm){cur=p;show(p);return}
+ const w=$('.wipe'),o={easing:'cubic-bezier(.7,0,.2,1)',fill:'forwards'};
+ w.animate([{transform:'translateX(-101%)'},{transform:'translateX(0)'}],{...o,duration:380}).onfinish=()=>{cur=p;show(p);w.animate([{transform:'translateX(0)'},{transform:'translateX(101%)'}],{...o,duration:460})};
+}
+$$('[data-go]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();$('#'+a.dataset.go).scrollIntoView({behavior:rm?'auto':'smooth'})}));
+addEventListener('hashchange',route);route();
+</script>
 </body>
 </html>
